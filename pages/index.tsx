@@ -1,6 +1,5 @@
 import { config } from 'dotenv';
 import { TranslateBody } from '@/types/types';
-import { APIKeyInput } from '@/components/APIKeyInput';
 import { CodeBlock } from '@/components/CodeBlock';
 import { LanguageSelect } from '@/components/LanguageSelect';
 import { ModelSelect } from '@/components/ModelSelect';
