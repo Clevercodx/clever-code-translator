@@ -41,7 +41,7 @@ export default function Home() {
 
     // Créez un objet de type TranslateBody avec toutes les propriétés requ
 const translateBody: TranslateBody = {
-modèle
+modal
 inputLanguage,
 outputLanguage,
 code_entrée
