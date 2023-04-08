@@ -39,51 +39,38 @@ export default function Home() {
     setLoading(true);
     setOutputCode('');
 
-    // Créez un objet de type TranslateBody avec toutes les propriétés requ
-const translateBody: TranslateBody = {
-modal
-inputLanguage,
-outputLanguage,
-code_entrée
-};
-try {
-  const response = await fetch('/api/translate', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(translateBody)
-  });
+    // Create a TranslateBody object with all the required properties, including 'apiKey'
+    const translateBody: TranslateBody = {
+      inputLanguage: inputLanguage,
+      outputLanguage: outputLanguage,
+      inputCode: inputCode,
+      model: model,
+      apiKey: 'YOUR_API_KEY' // Replace 'YOUR_API_KEY' with your actual API key
+    };
 
-  const { code }: { code: string } = await response.json();
-  setOutputCode(code);
-  setHasTranslated(true);
-} catch (error) {
-  console.error('Erreur lors de la traduction :', error);
-} finally {
-  setLoading(false);
-}
-};
+    const response = await fetch('/api/translate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(translateBody),
+    });
 
-const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-setInputCode(e.target.value);
-poser
-
-useEffect(() => {
-if (hasTranslated) {
-document.execCommand('copie');
-}
-},
-
-    const data = response.body;
-
-    if (!data) {
+    if (!response.ok) {
       setLoading(false);
-      alert('Something went wrong.');
+      alert('Quelque chose s’est mal passé.');
       return;
     }
 
-    const reader = data.getReader();
+    const data = await response.json();
+
+    if (!data) {
+      setLoading(false);
+      alert('Quelque chose s’est mal passé.');
+      return;
+    }
+
+    const reader = data.body.getReader();
     const decoder = new TextDecoder();
     let done = false;
     let code = '';
@@ -121,10 +108,10 @@ document.execCommand('copie');
   return (
     <>
       <Head>
-        <title>Clever Code Translator</title>
+        <title>Traducteur de code intelligent</title>
         <meta
           name="description"
-          content="Use AI to translate code from one language to another."
+          content="Utilisez l’IA to translate code from one language to another."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
