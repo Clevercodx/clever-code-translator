@@ -4,7 +4,6 @@ import { CodeBlock } from '@/components/CodeBlock';
 import { LanguageSelect } from '@/components/LanguageSelect';
 import { ModelSelect } from '@/components/ModelSelect';
 import { TextBlock } from '@/components/TextBlock';
-import { OpenAIModel, TranslateBody } from '@/types/types';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 
@@ -21,18 +20,18 @@ export default function Home() {
     const maxCodeLength = model === 'gpt-3.5-turbo' ? 6000 : 12000;
 
     if (inputLanguage === outputLanguage) {
-      alert('Please select different languages.');
+      alert('Veuillez sélectionner différentes langues.');
       return;
     }
 
     if (!inputCode) {
-      alert('Please enter some code.');
+      alert('Veuillez saisir un code.');
       return;
     }
 
     if (inputCode.length > maxCodeLength) {
       alert(
-        `Please enter code less than ${maxCodeLength} characters. You are currently at ${inputCode.length} characters.`,
+        `Veuillez saisir le code de moins de ${maxCodeLength} caractères. Vous êtes actuellement à ${inputCode.length} caractères.`
       );
       return;
     }
@@ -40,29 +39,41 @@ export default function Home() {
     setLoading(true);
     setOutputCode('');
 
-    // Créez un objet de type TranslateBody avec toutes les propriétés requises, y compris 'apiKey'
+    // Créez un objet de type TranslateBody avec toutes les propriétés requ
 const translateBody: TranslateBody = {
-  inputLanguage: inputLanguage,
-  outputLanguage: outputLanguage,
-  inputCode: inputCode,
-  model: model,
-  apiKey: 'YOUR_API_KEY' // Remplacez 'YOUR_API_KEY' par votre véritable clé d'API
-};;
+modèle
+inputLanguage,
+outputLanguage,
+code_entrée
+};
+try {
+  const response = await fetch('/api/translate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(translateBody)
+  });
 
-    const response = await fetch('/api/translate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      signal: controller.signal,
-      body: JSON.stringify(body),
-    });
+  const { code }: { code: string } = await response.json();
+  setOutputCode(code);
+  setHasTranslated(true);
+} catch (error) {
+  console.error('Erreur lors de la traduction :', error);
+} finally {
+  setLoading(false);
+}
+};
 
-    if (!response.ok) {
-      setLoading(false);
-      alert('Something went wrong.');
-      return;
-    }
+const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+setInputCode(e.target.value);
+poser
+
+useEffect(() => {
+if (hasTranslated) {
+document.execCommand('copie');
+}
+},
 
     const data = response.body;
 
