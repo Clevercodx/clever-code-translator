@@ -1,3 +1,4 @@
+import { config } from 'dotenv';
 import { APIKeyInput } from '@/components/APIKeyInput';
 import { CodeBlock } from '@/components/CodeBlock';
 import { LanguageSelect } from '@/components/LanguageSelect';
@@ -15,15 +16,9 @@ export default function Home() {
   const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
   const [loading, setLoading] = useState<boolean>(false);
   const [hasTranslated, setHasTranslated] = useState<boolean>(false);
-  const [apiKey, setApiKey] = useState<string>('');
 
   const handleTranslate = async () => {
     const maxCodeLength = model === 'gpt-3.5-turbo' ? 6000 : 12000;
-
-    if (!apiKey) {
-      alert('Please enter an API key.');
-      return;
-    }
 
     if (inputLanguage === outputLanguage) {
       alert('Please select different languages.');
@@ -52,7 +47,6 @@ export default function Home() {
       outputLanguage,
       inputCode,
       model,
-      apiKey,
     };
 
     const response = await fetch('/api/translate', {
@@ -107,25 +101,11 @@ export default function Home() {
     document.body.removeChild(el);
   };
 
-  const handleApiKeyChange = (value: string) => {
-    setApiKey(value);
-
-    localStorage.setItem('apiKey', value);
-  };
-
   useEffect(() => {
     if (hasTranslated) {
       handleTranslate();
     }
   }, [outputLanguage]);
-
-  useEffect(() => {
-    const apiKey = localStorage.getItem('apiKey');
-
-    if (apiKey) {
-      setApiKey(apiKey);
-    }
-  }, []);
 
   return (
     <>
@@ -139,31 +119,23 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex h-full min-h-screen flex-col items-center bg-[#0E1117] px-4 pb-20 text-neutral-200 sm:px-10">
-        <div className="mt-20 flex flex-col items-center justify-center sm:mt-30">
+        <div className="mt-10 flex flex-col items-center justify-center sm:mt-30">
           <div className="text-4xl font-bold">Clever Code Translator</div>
         </div>
 
-        
-
         <div className="mt-2 flex items-center space-x-2">
-          <ModelSelect model={model} onChange={(value) => setModel(value)} />
+  <ModelSelect model={model} onChange={(value) => setModel(value)} />
 
-          <button
-            className="w-[140px] cursor-pointer rounded-md bg-violet-500 px-4 py-2 font-bold hover:bg-violet-600 active:bg-violet-700"
-            onClick={() => handleTranslate()}
-            disabled={loading}
-          >
-            {loading ? 'Translating...' : 'Translate'}
-          </button>
-        </div>
+  
+</div>
 
-        <div className="mt-2 text-center text-xs">
-          {loading
-            ? 'Translating...'
-            : hasTranslated
-            ? 'Output copied to clipboard!'
-            : 'Enter some code and click "Translate"'}
-        </div>
+<div className="mt-2 text-center text-xs">
+  {loading
+    ? 'Translating...'
+    : hasTranslated
+    ? 'Output copied to clipboard!'
+    : 'Enter some code and click "Translate"'}
+</div>
 
         <div className="mt-6 flex w-full max-w-[1200px] flex-col justify-between sm:flex-row sm:space-x-4">
           <div className="h-100 flex flex-col justify-center space-y-2 sm:w-2/4">
@@ -199,8 +171,23 @@ export default function Home() {
               />
             )}
           </div>
-          <div className="mt-8 flex h-full flex-col justify-center space-y-2 sm:mt-0 sm:w-2/4">
-            <div className="text-center text-xl font-bold">Output</div>
+ <button
+    className="w-[200px] h-[50px] mt-60 cursor-pointer rounded-md bg-violet-500 px-4 py-1 font-bold hover:bg-violet-600 active:bg-violet-700"
+    onClick={() => handleTranslate()}
+    disabled={loading}
+>
+    {loading ? 'Translating...' : 'Translate'}
+</button>
+
+
+
+
+
+          
+
+
+<div className="mt-8 flex h-full flex-col justify-center space-y-2 sm:mt-0 sm:w-2/4">
+          <div className="text-center text-xl font-bold">Output</div>
 
             <LanguageSelect
               language={outputLanguage}
@@ -217,7 +204,38 @@ export default function Home() {
             )}
           </div>
         </div>
-      </div>
-    </>
-  );
+   
+  </div>
+  <div className="flex h-full min-h-0 flex-col items-center bg-[#0E1117] px-14 pb-20 text-neutral-200 sm:px-100">
+    <nav className="space-x-8">
+      <a href="#" className="hover:underline">
+        Tutoriels
+      </a>
+      <a href="#" className="hover:underline">
+        Cours
+      </a>
+      <a href="#" className="hover:underline">
+        Exercices
+      </a>
+      <a href="#" className="hover:underline">
+        Forum
+      </a>
+      <a href="#" className="hover:underline">
+        Foire aux questions
+      </a>
+      <a href="#" className="hover:underline">
+        Contactez-nous
+      </a>
+      <a href="#" className="hover:underline">
+        À propos
+      </a>
+      <a href="#" className="hover:underline">
+        Mentions légales
+      </a>
+    </nav>
+  
+</div>
+</>
+
+);
 }
