@@ -1,4 +1,5 @@
 import { config } from 'dotenv';
+import { TranslateBody } from '@/types/types';
 import { APIKeyInput } from '@/components/APIKeyInput';
 import { CodeBlock } from '@/components/CodeBlock';
 import { LanguageSelect } from '@/components/LanguageSelect';
@@ -40,14 +41,14 @@ export default function Home() {
     setLoading(true);
     setOutputCode('');
 
-    const controller = new AbortController();
-
-    const body: TranslateBody = {
-      inputLanguage,
-      outputLanguage,
-      inputCode,
-      model,
-    };
+    // Créez un objet de type TranslateBody avec toutes les propriétés requises, y compris 'apiKey'
+const translateBody: TranslateBody = {
+  inputLanguage: inputLanguage,
+  outputLanguage: outputLanguage,
+  inputCode: inputCode,
+  model: model,
+  apiKey: 'YOUR_API_KEY' // Remplacez 'YOUR_API_KEY' par votre véritable clé d'API
+};;
 
     const response = await fetch('/api/translate', {
       method: 'POST',
